@@ -9,6 +9,10 @@ class TaskToDTOTransformer
 {
     public function transform(Task $task): TaskRead
     {
+        if (null === $task->getCategory()) {
+            throw new \InvalidArgumentException("Each task should be linked to a category");
+        }
+
         return new TaskRead(
             $task->getId(),
             $task->getName(),

@@ -93,9 +93,11 @@ class Task
         return $this->category;
     }
 
-    public function setCategory(?Category $category): void
+    public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
