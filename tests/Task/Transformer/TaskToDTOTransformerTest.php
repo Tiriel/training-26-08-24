@@ -10,27 +10,25 @@ use PHPUnit\Framework\TestCase;
 
 class TaskToDTOTransformerTest extends TestCase
 {
+    protected static TaskToDTOTransformer $transformer;
+
+    public static function setUpBeforeClass(): void
+    {
+        static::$transformer = new TaskToDTOTransformer();
+    }
+
     public function testTransformerReturnsTaskReadInstance(): void
     {
-        $task = (new Task())
-            ->setName('foo')
-            ->setCategory(new Category())
-        ;
-        $transformer = new TaskToDTOTransformer();
-        $result = $transformer->transform($task);
+        $task = $this->getTask();
+        $result = static::$transformer->transform($task);
 
         $this->assertInstanceOf(TaskRead::class, $result);
     }
 
     public function testTransformerMapsFieldsFromEntityToDto(): void
     {
-        $task = (new Task())
-            ->setName('foo')
-            ->setDescription('Some description')
-            ->setCategory(new Category())
-        ;
-        $transformer = new TaskToDTOTransformer();
-        $result = $transformer->transform($task);
+        $task = $this->getTask();
+        $result = static::$transformer->transform($task);
 
         $this->assertSame('foo', $result->getName());
         $this->assertSame('Some description', $result->getDescription());
@@ -41,11 +39,21 @@ class TaskToDTOTransformerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Each task should be linked to a category');
 
+        $task = $this->getTask(false);
+        $result = static::$transformer->transform($task);
+    }
+
+    protected function getTask(bool $withCategory = true): Task
+    {
         $task = (new Task())
             ->setName('foo')
             ->setDescription('Some description')
         ;
-        $transformer = new TaskToDTOTransformer();
-        $result = $transformer->transform($task);
+
+        if ($withCategory) {
+            $task->setCategory(new Category());
+        }
+
+        return $task;
     }
 }
