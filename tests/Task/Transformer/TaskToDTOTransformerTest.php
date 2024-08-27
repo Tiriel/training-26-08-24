@@ -8,6 +8,9 @@ use App\Entity\Task;
 use App\Task\Transformer\TaskToDTOTransformer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \App\Task\Transformer\TaskToDTOTransformer
+ */
 class TaskToDTOTransformerTest extends TestCase
 {
     protected static TaskToDTOTransformer $transformer;
@@ -17,6 +20,9 @@ class TaskToDTOTransformerTest extends TestCase
         static::$transformer = new TaskToDTOTransformer();
     }
 
+    /**
+     * @group unit
+     */
     public function testTransformerReturnsTaskReadInstance(): void
     {
         $task = $this->getTask();
